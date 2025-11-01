@@ -19,6 +19,8 @@ export default function BurgerCard({ lanche }) {
       imagem: imageUrl,
       preco: lanche.preco
     };
+    localStorage.removeItem('itemParaEditar');
+    localStorage.removeItem('lancheParaPersonalizar');
     localStorage.setItem('lancheParaPersonalizar', JSON.stringify(lancheSelecionado));
     router.push('/personalizacao');
   };
