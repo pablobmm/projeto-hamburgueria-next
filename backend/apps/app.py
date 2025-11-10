@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flasgger import Swagger  
+from flasgger import Swagger 
 
 app = Flask(__name__)
 CORS(app)
@@ -14,13 +14,20 @@ app.config['DEBUG'] = True
 app.config['JSON_AS_ASCII'] = False
 
 # Configuração do banco de dados
-DB_USER = os.environ.get("DB_USER")
-DB_PASWORD = os.environ.get("DB_PASSWORD")
-DB_HOST = os.environ.get("DB_HOST")
-DB_PORT = os.environ.get("DB_PORT")
-DB_NAME = os.environ.get("DB_NAME")
+# ----------------------------------------------------------------------
+# 1. Definir valores padrão para DEV (Se as variáveis de ambiente estiverem vazias)
+# 🚨🚨 AJUSTE AQUI: Mude '123456' e 'root' para suas credenciais reais do MySQL local
+DEFAULT_DB_USER = os.environ.get("DB_USER", "root") 
+DEFAULT_DB_PASSWORD = os.environ.get("DB_PASSWORD", "SUA_SENHA_MYSQL_AQUI") 
+DEFAULT_DB_HOST = os.environ.get("DB_HOST", "localhost")
+DEFAULT_DB_PORT = os.environ.get("DB_PORT", "3306") # Porta padrão do MySQL
+DEFAULT_DB_NAME = os.environ.get("DB_NAME", "hamburgueria_db") 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://{DB_USER}:{DB_PASWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# 2. Monta a URI com os valores padrão. Isso resolve o erro 'None'
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    f"mysql+pymysql://{DEFAULT_DB_USER}:{DEFAULT_DB_PASSWORD}@{DEFAULT_DB_HOST}:{DEFAULT_DB_PORT}/{DEFAULT_DB_NAME}"
+)
+# ----------------------------------------------------------------------
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Inicializa o SQLAlchemy
