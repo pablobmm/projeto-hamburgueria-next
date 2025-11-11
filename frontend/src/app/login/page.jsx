@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation'; 
 
 // 🚨🚨 URL do seu backend Flask (MUITO IMPORTANTE!)
-const FLASK_LOGIN_URL = 'http://127.0.0.1:5000/login'; 
+const FLASK_LOGIN_URL = 'http://127.0.0.1:5002/login'; 
 
 export default function LoginPage() {
     // 2. Estado para guardar o que o usuário digita
@@ -85,36 +85,7 @@ export default function LoginPage() {
     // 5. O JSX (HTML com classes Tailwind) para o visual
     return (
         <>
-            {/* O HEADER está aqui, mas o ideal é movê-lo para o layout.js */}
-            <header className="bg-cb-background">
-                <div className="container mx-auto flex items-center pt-4 pb-8 px-12 max-w-7xl">
-                    <div className="logo">
-                        <Link href="/" className="font-calistoga text-2xl text-white no-underline">
-                            Code <span className="text-cb-primary">•</span> Burger
-                        </Link>
-                    </div>
-                    {/* Navegação principal - Classes Tailwind */}
-                    <nav className="flex-1 flex items-center hidden md:flex">
-                        <ul className="flex-1 flex space-x-8 ml-8">
-                            <li><Link href="/" className="text-white hover:text-cb-text-muted no-underline">Início</Link></li>
-                            <li><Link href="" className="text-white hover:text-cb-text-muted no-underline">Burgers</Link></li>
-                            <li><Link href="" className="text-white hover:text-cb-text-muted no-underline">Contato</Link></li>
-                        </ul>
-                        <div className="flex space-x-4">
-                            <Link href="" className="border border-white py-3 px-6 rounded-md text-white no-underline hover:border-cb-text-muted hover:text-cb-text-muted transition duration-300">Fazer pedido</Link>
-                            <Link href="/login" className="border border-white py-3 px-6 rounded-md text-white no-underline hover:border-cb-text-muted hover:text-cb-text-muted transition duration-300">Login</Link>
-                            <Link href="/cadastro" className="border border-white py-3 px-6 rounded-md text-white no-underline hover:border-cb-text-muted hover:text-cb-text-muted transition duration-300">Cadastro</Link>
-                        </div>
-                    </nav>
-                    <div className="md:hidden flex-1 flex justify-end">
-                        <div className="w-8 h-8 flex flex-col justify-between cursor-pointer">
-                            <div className="h-1 bg-white"></div>
-                            <div className="h-1 bg-white"></div>
-                            <div className="h-1 bg-white"></div>
-                        </div>
-                    </div>
-                </div>
-            </header>
+        
 
             {/* CONTAINER PRINCIPAL DO LOGIN */}
             <div className="flex-grow flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_center,_#1a1a1a_0%,_#0a0a0a_100%)] min-h-[calc(100vh-80px)]">

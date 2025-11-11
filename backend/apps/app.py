@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flasgger import Swagger 
 
+
 app = Flask(__name__)
 CORS(app)
 
@@ -12,6 +13,7 @@ app.config['HOST'] = "0.0.0.0"
 app.config['PORT'] = 5002
 app.config['DEBUG'] = True
 app.config['JSON_AS_ASCII'] = False
+
 
 # Configuração do banco de dados
 # ----------------------------------------------------------------------
