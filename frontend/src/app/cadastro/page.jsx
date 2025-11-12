@@ -149,12 +149,17 @@ export default function CadastroPage() {
                                         type="tel" 
                                         id="telefone" 
                                         className="w-full p-3 border border-cb-border rounded-lg bg-cb-background text-white text-sm focus:outline-none focus:border-cb-primary focus:shadow-[0_0_0_3px_rgba(255,107,53,0.1)] transition duration-300"
-                                        placeholder="(11) 99999-9999" 
+                                        placeholder="Digite 8 números" 
                                         required 
                                         value={telefone}
-                                        onChange={(e) => setTelefone(e.target.value)}
+                                        onChange={(e) => {
+                                            const value = e.target.value.replace(/\D/g, ''); // remove caracteres não numéricos
+                                            if (value.length <= 11) setTelefone(value); // limita a 8 dígitos
+                                        }}
+                                        maxLength={11} // previne digitar mais que 8 números
                                         disabled={isLoading}
                                     />
+
                                 </div>
                                 
                                 {/* Campo Endereço */}

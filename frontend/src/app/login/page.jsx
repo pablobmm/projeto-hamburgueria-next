@@ -1,180 +1,140 @@
-// src/app/login/page.jsx
-
-// 1. Usamos 'use client' porque esta página tem formulário e interatividade (hooks do React)
-'use client'; 
+'use client';
 
 import Link from 'next/link';
-// Importamos os hooks necessários para o formulário
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 
-// 🚨🚨 URL do seu backend Flask (MUITO IMPORTANTE!)
-const FLASK_LOGIN_URL = 'http://127.0.0.1:5002/login'; 
+const FLASK_LOGIN_URL = 'http://127.0.0.1:5002/login';
 
 export default function LoginPage() {
-    // 2. Estado para guardar o que o usuário digita
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    // Estado para controlar o botão de envio
-    const [isLoading, setIsLoading] = useState(false);
-    // Estado para mostrar mensagens de feedback (sucesso/erro)
-    const [message, setMessage] = useState(null); 
-    
-    const router = useRouter(); 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const router = useRouter();
 
-    // 3. Função para mostrar as notificações flutuantes (Toast)
-    const showToast = (title, description, isError = false) => {
-        setMessage({ title, description, isError });
-        const toastElement = document.getElementById('toast');
-        if (toastElement) {
-            // Lógica para mostrar o toast (Tailwind classes)
-            toastElement.classList.remove('hidden', 'translate-x-full');
-            toastElement.classList.add('translate-x-0');
-            
-            setTimeout(() => {
-                // Lógica para esconder o toast
-                toastElement.classList.remove('translate-x-0');
-                toastElement.classList.add('translate-x-full');
-                setTimeout(() => toastElement.classList.add('hidden'), 300);
-            }, 5000); 
-        }
-    };
+  const showToast = (title, description, isError = false) => {
+    setMessage({ title, description, isError });
+    const toastElement = document.getElementById('toast');
+    if (toastElement) {
+      toastElement.classList.remove('hidden', 'translate-x-full');
+      toastElement.classList.add('translate-x-0');
+      setTimeout(() => {
+        toastElement.classList.remove('translate-x-0');
+        toastElement.classList.add('translate-x-full');
+        setTimeout(() => toastElement.classList.add('hidden'), 300);
+      }, 5000);
+    }
+  };
 
-    // 4. FUNÇÃO PRINCIPAL: O que acontece quando você clica em 'Entrar'
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (isLoading) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (isLoading) return;
 
-        setIsLoading(true);
-        setMessage(null); 
+    setIsLoading(true);
+    setMessage(null);
 
-        try {
-            // Chamada de Rede (Fetch) para o seu servidor Flask
-            const response = await fetch(FLASK_LOGIN_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                // 🚨🚨 Envia os dados. Se o seu Flask espera 'password', mude 'senha: password' para 'password: password'
-                body: JSON.stringify({ email: email, senha: password }), 
-            });
+    try {
+      const response = await fetch(FLASK_LOGIN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, senha: password }),
+      });
 
-            if (response.ok) { 
-                const data = await response.json();
-                console.log('Login Sucesso:', data); 
-                // Lógica para salvar o token/sessão vai aqui!
-                
-                showToast('Sucesso!', 'Login realizado com sucesso! Redirecionando...', false);
-                
-                setTimeout(() => {
-                    router.push('/'); // Redireciona para a página inicial
-                }, 1500); 
-                
-            } else { 
-                const errorData = await response.json();
-                const errorMessage = errorData.message || 'Credenciais inválidas ou erro desconhecido.';
-                showToast('Falha no Login', errorMessage, true);
-            }
+      if (response.ok) {
+        showToast('Sucesso!', 'Login realizado com sucesso! Redirecionando...', false);
+        setTimeout(() => router.push('/'), 1500);
+      } else {
+        const errorData = await response.json();
+        const errorMessage = errorData.message || 'Credenciais inválidas ou erro desconhecido.';
+        showToast('Falha no Login', errorMessage, true);
+      }
+    } catch (error) {
+      showToast('Erro de Conexão', 'Não foi possível conectar ao servidor. Verifique o Flask.', true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-        } catch (error) {
-            console.error('Erro na requisição:', error);
-            showToast('Erro de Conexão', 'Não foi possível conectar ao servidor. Verifique o Flask.', true);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    
-    // 5. O JSX (HTML com classes Tailwind) para o visual
-    return (
-        <>
-        
+  return (
+    <>
+      <div className="flex items-center justify-center min-h-screen p-4 bg-[radial-gradient(ellipse_at_center,_#1a1a1a_0%,_#0a0a0a_100%)]">
+        <div className="w-full max-w-md flex flex-col gap-4">
+          <div className="text-center">
+            <img
+              src="/assets/logo_codeburguer.png"
+              alt="Code Burger"
+              className="h-16 w-16 mx-auto mb-4 rounded-full"
+            />
+            <h1 className="text-3xl font-bold text-[#FF914D] mb-2">Code Burger</h1>
+            <p className="text-gray-400 text-sm mt-0">Entre na sua conta para continuar</p>
+          </div>
 
-            {/* CONTAINER PRINCIPAL DO LOGIN */}
-            <div className="flex-grow flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_center,_#1a1a1a_0%,_#0a0a0a_100%)] min-h-[calc(100vh-80px)]">
-                <div className="w-full max-w-sm flex flex-col gap-8 animate-fadeIn-slow">
-                    {/* Título e Logo */}
-                    <div className="text-center">
-                        <img src="/logoicone/logo_codeburguer.png" alt="Code Burger" className="h-16 w-16 mx-auto mb-4 rounded-full" />
-                        <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-1">
-                            Code Burger
-                        </h1>
-                        <p className="text-cb-text-muted text-sm">Entre na sua conta para continuar</p>
-                    </div>
-
-                    {/* CARD DO FORMULÁRIO */}
-                    <div className="bg-cb-card-bg border border-cb-border rounded-xl shadow-glow overflow-hidden animate-fadeIn-fast">
-                        <div className="p-6 pb-0 text-center">
-                            <h2 className="text-2xl font-semibold mb-2">Login</h2>
-                            <p className="text-cb-text-muted text-sm">Digite suas credenciais para acessar</p>
-                        </div>
-                        
-                        <div className="p-6">
-                            {/* Formulário com o evento de envio */}
-                            <form id="loginForm" className="flex flex-col space-y-6" onSubmit={handleSubmit}> 
-                                {/* Campo Email */}
-                                <div className="flex flex-col space-y-2">
-                                    <label htmlFor="email" className="text-sm font-medium text-white">Email</label>
-                                    <input 
-                                        type="email" 
-                                        id="email" 
-                                        className="w-full p-3 border border-cb-border rounded-lg bg-cb-background text-white text-sm focus:outline-none focus:border-cb-primary focus:shadow-[0_0_0_3px_rgba(255,107,53,0.1)] transition duration-300"
-                                        placeholder="seu@email.com" 
-                                        required 
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        disabled={isLoading}
-                                    />
-                                </div>
-                                
-                                {/* Campo Senha */}
-                                <div className="flex flex-col space-y-2">
-                                    <label htmlFor="password" className="text-sm font-medium text-white">Senha</label>
-                                    <input 
-                                        type="password" 
-                                        id="password" 
-                                        className="w-full p-3 border border-cb-border rounded-lg bg-cb-background text-white text-sm focus:outline-none focus:border-cb-primary focus:shadow-[0_0_0_3px_rgba(255,107,53,0.1)] transition duration-300"
-                                        placeholder="••••••••" 
-                                        required 
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        disabled={isLoading}
-                                    />
-                                </div>
-
-                                {/* BOTÃO DE ENVIO */}
-                                <button 
-                                    type="submit" 
-                                    className={`w-full p-3 border-none rounded-lg text-sm font-medium text-white bg-gradient-primary shadow-lg shadow-cb-primary/[.3] hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ${isLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? 'Entrando...' : 'Entrar'}
-                                </button>
-                            </form>
-
-                            {/* Link para Cadastro */}
-                            <div className="mt-6 text-center">
-                                <p className="text-cb-text-muted text-xs">
-                                    Não tem uma conta? 
-                                    <Link href="/cadastro" className="text-cb-primary font-medium ml-1 hover:underline transition">Cadastre-se</Link>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+          <div className="bg-[#1b1b1b] border border-[#333333] rounded-xl shadow-[0_0_20px_rgba(255,107,53,0.4)] overflow-hidden">
+            <div className="px-6 pb-6 pt-4">
+              <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+                <div className="flex flex-col space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium text-white">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="seu@email.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={isLoading}
+                    className="w-full p-3 rounded-lg bg-[#333333] border border-[#444444] text-white text-sm focus:outline-none focus:border-[#FF914D] focus:ring-1 focus:ring-[#FF914D] transition"
+                  />
                 </div>
-            </div>
 
-            {/* TOAST de feedback (oculto por padrão) */}
-            <div 
-                id="toast" 
-                className={`fixed top-8 right-8 bg-cb-card-bg border rounded-lg p-4 max-w-xs shadow-xl transition-all duration-300 ease-in-out z-50 transform ${message ? 'translate-x-0' : 'translate-x-full hidden'} ${message?.isError ? 'border-red-600' : 'border-cb-border'}`}
-            >
-                <div className="flex flex-col gap-1">
-                    <h3 className={`text-base font-semibold ${message?.isError ? 'text-red-400' : 'text-white'}`}>
-                        {message?.title}
-                    </h3>
-                    <p className="text-sm text-cb-text-muted">
-                        {message?.description}
-                    </p>
+                <div className="flex flex-col space-y-2">
+                  <label htmlFor="password" className="text-sm font-medium text-white">Senha</label>
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="••••••••"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={isLoading}
+                    className="w-full p-3 rounded-lg bg-[#333333] border border-[#444444] text-white text-sm focus:outline-none focus:border-[#FF914D] focus:ring-1 focus:ring-[#FF914D] transition"
+                  />
                 </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className={`w-full p-3 rounded-lg text-white font-medium text-sm bg-gradient-to-r from-[#FF914D] to-[#FFBB77] shadow-lg shadow-[#FF914D]/30 hover:shadow-xl hover:scale-[1.01] transition duration-300 ${isLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                >
+                  {isLoading ? 'Entrando...' : 'Entrar'}
+                </button>
+              </form>
+
+              <div className="mt-6 text-center">
+                <p className="text-gray-400 text-xs">
+                  Não tem uma conta?
+                  <Link href="/cadastro" className="text-[#FF914D] font-medium ml-1 hover:underline">
+                    Cadastre-se
+                  </Link>
+                </p>
+              </div>
             </div>
-        </>
-    )
+          </div>
+        </div>
+      </div>
+
+      {/* Toast */}
+      <div
+        id="toast"
+        className={`fixed top-8 right-8 bg-[#1b1b1b] border rounded-lg p-4 max-w-xs shadow-xl transition-transform duration-300 ease-in-out z-50 transform ${message ? 'translate-x-0' : 'translate-x-full hidden'} ${message?.isError ? 'border-red-600' : 'border-[#333333]'}`}
+      >
+        <div className="flex flex-col gap-1">
+          <h3 className={`text-base font-semibold ${message?.isError ? 'text-red-400' : 'text-white'}`}>
+            {message?.title}
+          </h3>
+          <p className="text-sm text-gray-400">{message?.description}</p>
+        </div>
+      </div>
+    </>
+  );
 }
