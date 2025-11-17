@@ -17,7 +17,11 @@ export default function PaginaCarrinho() {
         const novoTotal = carrinhoSalvo.reduce((acumulador, item) => {
             return acumulador + (item.precoTotalUnitario * item.quantidade);
         }, 0);
+
         setTotal(novoTotal);
+
+        // 🚀 SALVANDO O SUBTOTAL PARA A PÁGINA DE PAGAMENTO
+        localStorage.setItem("subtotal", novoTotal);
     }, []);
 
     return (
