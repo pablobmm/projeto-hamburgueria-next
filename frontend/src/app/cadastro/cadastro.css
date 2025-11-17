@@ -1,0 +1,80 @@
+/* Fundo com gradiente radial escuro */
+.cadastro-bg {
+  background: radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 100%);
+  color: white;
+}
+
+/* Card com borda sutil e glow alaranjado */
+.cadastro-card {
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 115, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 115, 0, 0.15);
+  border-radius: 1.5rem;
+  padding: 1.5rem 2rem; /* 🔹 antes era maior */
+  width: 100%;
+  max-width: 400px; /* 🔹 reduziu um pouco (antes era 480px) */
+  margin: 2rem auto;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Título com gradiente laranja */
+.text-gradient {
+  background: linear-gradient(90deg, #ff8c3b, #ffb347);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Inputs */
+.cadastro-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.3rem;
+  border-radius: 0.5rem;
+  border: 1px solid #333;
+  background-color: #111;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.cadastro-input:focus {
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+/* Botão */
+.cadastro-btn {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(90deg, #ff6b35, #ff9a3d);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
+  transition: all 0.3s ease;
+}
+
+.cadastro-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(255, 107, 53, 0.6);
+}
+
+/* Animação suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-in-out;
+}
