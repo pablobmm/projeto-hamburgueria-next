@@ -29,6 +29,7 @@ services:
       db:
         condition: service_healthy
     environment:
+      PYTHONDONTWRITEBYTECODE: 1
       DB_HOST: db
       DB_PORT: 3306
       DB_NAME: Hamburgueria
