@@ -9,7 +9,7 @@ export default function Footer() {
             Code <span className="text-amber-500">•</span> Burger
           </Link>
         </div>
-        {/* Você pode adicionar mais links aqui se precisar */}
+        
       </div>
     </footer>
   );

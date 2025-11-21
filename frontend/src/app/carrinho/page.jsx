@@ -20,7 +20,6 @@ export default function PaginaCarrinho() {
 
         setTotal(novoTotal);
 
-        // 🚀 SALVANDO O SUBTOTAL PARA A PÁGINA DE PAGAMENTO
         localStorage.setItem("subtotal", novoTotal);
     }, []);
 
